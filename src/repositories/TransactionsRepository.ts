@@ -26,11 +26,11 @@ class TransactionsRepository {
   public getBalance(): Balance {
     const income = this.transactions
       .filter(transaction => transaction.type === 'income')
-      .reduce((sum, { value }) => sum + value, 0);
+      .reduce((sum, { value }: Transaction) => sum + value, 0);
 
     const outcome = this.transactions
       .filter(transaction => transaction.type === 'outcome')
-      .reduce((sum, { value }) => sum + value, 0);
+      .reduce((sum, { value }: Transaction) => sum + value, 0);
 
     const total = income - outcome;
 
@@ -42,7 +42,11 @@ class TransactionsRepository {
   }
 
   public create({ title, value, type }: CreateTransactionDTO): Transaction {
-    const transaction = new Transaction({ title, value, type });
+    const transaction = new Transaction({
+      title,
+      value,
+      type,
+    });
 
     this.transactions.push(transaction);
 
