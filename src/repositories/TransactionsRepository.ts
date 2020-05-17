@@ -9,7 +9,7 @@ interface Balance {
 interface CreateTransactionDTO {
   title: string;
   value: number;
-  type: string;
+  type: 'income' | 'outcome';
 }
 
 class TransactionsRepository {
@@ -24,7 +24,21 @@ class TransactionsRepository {
   }
 
   public getBalance(): Balance {
-    // TODO
+    const income = this.transactions
+      .filter(transaction => transaction.type === 'income')
+      .reduce((sum, { value }) => sum + value, 0);
+
+    const outcome = this.transactions
+      .filter(transaction => transaction.type === 'outcome')
+      .reduce((sum, { value }) => sum + value, 0);
+
+    const total = income - outcome;
+
+    return {
+      income,
+      outcome,
+      total,
+    };
   }
 
   public create({ title, value, type }: CreateTransactionDTO): Transaction {
